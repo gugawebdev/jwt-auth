@@ -27,12 +27,12 @@ exports.SignIn = (req, res)=>{
             throw err
         }
         if(!user){
-            res.json({success:false, message: 'Authentication failed. User not found.'})
+            res.status(400).json({success:false, message: 'Authentication failed. User not found.'})
         } else{
             user.comparePassword(req.body.password,(err, isMatch)=>{
                 if(isMatch && !err){
                     let token = jwt.sign({id:user._id, username:user.username}, process.env.SECRET_TOKEN_KEY,{expiresIn:60})
-                    res.json({success:true, token: 'Bearer ' + token, user:user})
+                    res.status(200).json({success:true, token: 'Bearer ' + token, user:user})
                 }
                 else{
                     res.json({success:false, message:'Authentication failed. Password does not match'})
